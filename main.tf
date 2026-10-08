@@ -13,17 +13,16 @@ provider "aws" {
   region = var.aws_region
 }
 
-# Pick the first availability zone in the region
+
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
-# Always get the latest Amazon Linux 2023 image
+
 data "aws_ssm_parameter" "al2023" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
 
-# VPC: my own private network in AWS
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -34,7 +33,6 @@ resource "aws_vpc" "main" {
   }
 }
 
-# Public subnet: resources here can be reached from the internet
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_cidr
@@ -46,7 +44,6 @@ resource "aws_subnet" "public" {
   }
 }
 
-# Private subnet: no route to the internet
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_subnet_cidr
@@ -57,7 +54,6 @@ resource "aws_subnet" "private" {
   }
 }
 
-# Internet gateway: the door between the VPC and the internet
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
@@ -66,7 +62,6 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-# Public route table: send outside traffic through the internet gateway
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -85,7 +80,6 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-# Private route table: local VPC traffic only
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
@@ -99,7 +93,6 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private.id
 }
 
-# Security group: the firewall for the web server
 resource "aws_security_group" "web" {
   name        = "${var.project_name}-web-sg"
   description = "Allow HTTP from anywhere and SSH from my IP only"
@@ -145,7 +138,6 @@ resource "aws_instance" "web" {
   # Runs once on first boot and installs nginx with a custom page
   user_data = file("${path.module}/user_data.sh")
 
-  # Require IMDSv2, a simple security best practice
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
