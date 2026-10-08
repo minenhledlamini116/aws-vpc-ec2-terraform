@@ -1,4 +1,3 @@
-
 # Secure Web Server in a Custom VPC (Terraform)
 
 A beginner friendly AWS project. It builds a custom network from scratch and runs a web server inside it, all from code.
