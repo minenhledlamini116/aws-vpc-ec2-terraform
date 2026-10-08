@@ -1,5 +1,4 @@
 #!/bin/bash
-# Runs automatically the first time the instance boots
 
 dnf update -y
 dnf install -y nginx
