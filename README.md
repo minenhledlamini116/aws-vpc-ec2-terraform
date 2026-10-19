@@ -107,7 +107,7 @@ This project does not use a NAT gateway on purpose, because NAT gateways are not
 
    ## Screenshots
 
-   ![Website](Picture1.png)
-   ![VPC resource map](Picture2.png)
-   ![EC2 instance](Picture3.png)
-   ![Terraform apply](Picture4.png)
+   ![Website](picture1.png)
+   ![VPC resource map](picture2.png)
+   ![EC2 instance](picture3.png)
+   ![Terraform apply](picture4.png)
